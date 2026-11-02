@@ -1,0 +1,32 @@
+name: YOLOv8 Training Workflow
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  training-job:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Install System Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libgl1-mesa-glx
+
+    - name: Install Python Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install mlflow dagshub ultralytics opencv-python
+
+    - name: Run MLflow Project
+      run: |
+        mlflow run .
